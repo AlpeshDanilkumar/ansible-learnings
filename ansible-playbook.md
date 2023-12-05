@@ -108,3 +108,35 @@ A handler is like a task but will only run when called by another task. It is us
 - service: Specifies the Ansible module to use (service in this case) for managing services.
 - name: httpd: Specifies the name of the service to be managed (httpd).
 - state: restarted: Specifies that the service should be restarted.
+
+# Loop in Ansible Playbook
+A loop in Ansible is a construct that allows you to repeat a particular task or set of tasks for each item in a list or a range. It simplifies the playbook by reducing redundancy and promoting reusability.
+## Loop for Adding Users to multiple hosts
+```
+---
+- hosts: demo
+  user: ansible
+  become: yes
+  connection: ssh
+
+  vars:
+    user_list:
+      - user1
+      - user2
+      - user3
+
+  tasks:
+    - name: Add users
+      user:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ user_list }}"
+```
+- vars:: Indicates the start of the variables section.
+- user_list:: Defines a variable named "user_list" as a list containing user names to be added.
+- tasks:Indicates the start of the tasks section.
+- -name: Add users: Defines a task named "Add users" for human readability.
+- user:Specifies the Ansible module to use (user in this case) for managing users.
+- name: "{{ item }}": Specifies the name of the user to be added, using the loop variable "{{ item }}" to iterate over the "user_list."
+- state: present: Specifies that the user should be present, ensuring it is added.
+- loop: "{{ user_list }}": Defines a loop over the "user_list," adding each user in the list.
